@@ -205,6 +205,7 @@ class WikiRequests:
         table.append(table_bottom)
         return table
 
+
     def update_osrs_creatre_wiki(self, final):
         for k in final:
             creature = final[k]['rows'][0]['row'][0]

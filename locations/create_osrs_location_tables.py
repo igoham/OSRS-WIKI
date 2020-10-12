@@ -111,15 +111,12 @@ class WikiRequests:
 
             consolidated = self.merge_rows(loc_group[key])
             final[key] = {"consolidated": consolidated, "key": key, "rows": loc_group[key]}
-        # if self.update_osrs_wiki(row=loc_group[key][0], consolidated=consolidated):
+
         if self.update_osrs_creatre_wiki(final=final):
-            x=1
+            print(f"Updating {len(final)} rows")
             self.update_spreadsheet_as_done(final)
-        else:
-            x=1
 
         x=1
-
 
     def process_undone(self):
         for row in self.rows['grouped']:
@@ -152,16 +149,10 @@ class WikiRequests:
             elif bool(re.match('|members = No', row)):
                 return False
 
-
     def get_location(self):
-        #
         loc = input('Submit Location')
-        # loc = "Tree Gnome Stronghold"
-
         self.location = f"[[{loc}]]"
-
         t= f"[[{loc}]]"
-
         url = f'https://oldschool.runescape.wiki/w/{loc.replace(" ", "_")}'
         edit_url = url + "?action=edit"
         resp = requests.get(url)
@@ -227,39 +218,15 @@ class WikiRequests:
         for key in final:
             table = self.add_row_to_location_table(table=table, row=final[key]['consolidated'])
         webbrowser.open_new_tab(f"https://oldschool.runescape.wiki/w/{creature}?action=edit")
+
         cleaned = "\n".join(table)
-        return True
-
-    def update_osrs_wiki(self, row, consolidated):
-
-        url = f"https://oldschool.runescape.wiki/w/{row['row'][0]}?action=edit"
-        template = self.get_current_template(url)
-        if self.has_location_table(template):
-            table = self.get_location_table(template)
-            table = self.add_row_to_location_table(table=table, row=consolidated)
+        print("You need a breakpoint HERE")
+        if bool(input("Type anything to update spreadsheet as done")):
+            return True
         else:
-            table = self.create_location_table(row=consolidated)
-
-
-        webbrowser.open_new_tab(f"https://oldschool.runescape.wiki/w/{row['row'][0]}?action=edit")
-        cleaned = "\n".join(table)
-        # print(cleaned)
-        x=1
-        return True
-
-
-
-
-
+            return False
 
 
 if __name__ == '__main__':
-    url = "https://oldschool.runescape.wiki/w/Aberrant_spectre?action=edit"
-    url = "https://oldschool.runescape.wiki/w/Twisted_Banshee?action=edit"
-
     w = WikiRequests()
     w.process_undone()
-
-
-
-    x=1

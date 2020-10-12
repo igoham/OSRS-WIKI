@@ -16,6 +16,7 @@ class WikiRequests:
         self.load_spread_sheet()
 
         self.s = requests.session()
+        #TODO add your cookies
         self.s.headers['Cookie'] = "WEBCOOKIES"
         self.s.headers['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0"
 
@@ -48,6 +49,7 @@ class WikiRequests:
                 pass
 
     def load_spread_sheet(self):
+        # TODO Add your own name here!
         self.rows = {
             "all": self.ws.get_all_values(),
             "incomplete": [{"row":row, "line_no": c} for c, row in enumerate(self.ws.get_all_values()) if row[1] == ''],
@@ -58,8 +60,10 @@ class WikiRequests:
         print(f"We completed {len(self.rows['Farcast'])} rows  for : {54 * len(self.rows['Farcast'])}k")
 
     def update_spreadsheet_as_done(self, final):
+
         for key in final:
             for row in final[key]['rows']:
+                # TODO Update with your Wiki name
                 self.ws.update(f"B{row['line_no']+1}", "Farcast")
         self.rows['Farcast'] = [{"row":row, "line_no": c} for c, row in enumerate(self.ws.get_all_values()) if row[1] == 'Farcast']
         print(f"We completed {len(self.rows['Farcast'])} rows  for : {54 * len(self.rows['Farcast'])}k")
@@ -73,7 +77,6 @@ class WikiRequests:
             else:
                 ret_dict[row['row'][0]].append(row)
         self.rows['grouped'] = ret_dict
-
 
     def merge_rows(self, rows):
         final_table = self.parse_template(rows[0]['row'][2])
@@ -116,12 +119,9 @@ class WikiRequests:
             print(f"Updating {len(final)} rows")
             self.update_spreadsheet_as_done(final)
 
-        x=1
-
     def process_undone(self):
         for row in self.rows['grouped']:
             self.process_creature(self.rows['grouped'][row])
-
 
     def process_row(self, row):
 
